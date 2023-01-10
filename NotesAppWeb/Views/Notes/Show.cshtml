@@ -1,0 +1,24 @@
+﻿@using NotesApp.Models
+@model NoteDTO
+
+<div class="border p-3 mt-4">
+    <div class="col-12">
+        <h1 class="text-black">@Model.Title</h1>
+    </div>
+    <div class="mb-3">
+        <p class="text-secondary">@Model.Content</p>
+    </div>
+    <form method="post" asp-action="Update">
+        <input asp-for="Id" hidden/>
+        <input asp-for="Title" hidden/>
+        <input asp-for="Content" hidden/>
+        <input asp-for="PasswordHash" hidden/>
+        <button type="submit" class="btn btn-warning" style="width:150px">Update</button>
+        <a asp-controller="Notes" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger" style="width:150px">
+            Delete
+        </a>
+        <a asp-controller="Notes" asp-action="Index" class="btn btn-info" style="width:150px">
+            Back to List
+        </a>
+    </form>
+</div>

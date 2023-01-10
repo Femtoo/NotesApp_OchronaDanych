@@ -72,14 +72,9 @@ namespace NotesAppWeb.Controllers
             return RedirectToAction("Privacy");
         }
 
-        public async Task<IActionResult> Privacy()
+        public IActionResult Privacy()
         {
-            var result = await _noteService.GetFromApi();
-            if (result == null)
-            {
-                return View();
-            }
-            return View((object)result);
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

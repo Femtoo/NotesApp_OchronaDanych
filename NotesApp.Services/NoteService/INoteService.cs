@@ -1,4 +1,5 @@
 ﻿using NotesApp.Models;
+using NotesApp.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace NotesApp.Services.NoteService
 {
     public interface INoteService
     {
-        Task<string> GetFromApi();
-        Task<IEnumerable<Note>> GetAllNotes();
-        Task AddNote(Note note);
-        Task RemoveNote(Note note);
-        Task UpdateNote(Note note);
+        Task<IEnumerable<NoteDTO>> GetAllNotes();
+        Task AddNote(NoteDTO note);
+        Task<bool> RemoveNote(int id);
+        Task UpdateNote(NoteDTO note);
+        Task<NoteDTO?> GetNote(PasswordVM password);
     }
 }

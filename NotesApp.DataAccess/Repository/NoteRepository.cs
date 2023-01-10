@@ -24,8 +24,10 @@ namespace NotesApp.DataAccess.Repository
             {
                 return false;
             }
-            _context.Notes.Attach(note);
-            _context.Entry(note).State = EntityState.Modified;
+            noteDb.Title = note.Title;
+            noteDb.Content = note.Content;
+            _context.Notes.Attach(noteDb);
+            _context.Entry(noteDb).State = EntityState.Modified;
             return true;
         }
     }

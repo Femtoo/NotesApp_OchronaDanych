@@ -5,13 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NotesApp.Models
+namespace NotesApp.Models.ViewModels
 {
-    public class LoginDTO
+    public class PasswordVM
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        public int NoteId { get; set; }
         [Required]
         public string Password { get; set; } = string.Empty;
     }

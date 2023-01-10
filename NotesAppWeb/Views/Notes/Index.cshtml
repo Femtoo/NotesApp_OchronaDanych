@@ -7,7 +7,7 @@
             <h2 class="text-primary">Notes List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Notes" asp-action="Create" class="btn btn-success">
+            <a asp-controller="Notes" asp-action="CreateNote" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> &nbsp; Create New Note
             </a>
         </div>
@@ -31,7 +31,7 @@
                 </td>
                 <td width="25%">
                     <div class="w-75 btn-group" role="group">
-                         <a asp-controller="Notes" asp-action="Show" asp-route-id="@obj.Id" class="btn btn-primary mx-2">Show</a>
+                         <a asp-controller="Notes" asp-action="Password" asp-route-id="@obj.Id" class="btn btn-primary mx-2">Show</a>
                     </div>
                 </td>
                 @*<td width="25%">

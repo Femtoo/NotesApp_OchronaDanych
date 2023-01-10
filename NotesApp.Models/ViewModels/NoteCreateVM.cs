@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NotesApp.Models
+namespace NotesApp.Models.ViewModels
 {
-    public class NoteDTO
+    public class NoteCreateVM
     {
-        public int Id { get; set; }
         [Required]
         public string Title { get; set; } = string.Empty;
         [Required]
         public string Content { get; set; } = string.Empty;
         [Required]
-        public string PasswordHash { get; set; } = string.Empty;
-        public int UserId { get; set; }
+        public string Password { get; set; } = string.Empty;
+        [Required]
+        [Display(Name = "Confirm Password")]
+        [Compare("Password", ErrorMessage = "Passwords have to match")]
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }
