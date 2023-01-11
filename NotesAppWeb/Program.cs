@@ -38,11 +38,21 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IPasswordHasher<NoteDTO>, PasswordHasher<NoteDTO>>();
 builder.Services.AddHttpClient("Notes", httpClient =>
 {
-    httpClient.BaseAddress = new Uri("https://localhost:7058/api/NotesApi/");
+    httpClient.BaseAddress = new Uri("http://app_api/api/NotesApi/");
 });
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<AppDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

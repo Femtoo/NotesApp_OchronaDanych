@@ -77,6 +77,14 @@ namespace NotesApp.Services.NoteService
             var httpClient = MakeHttpClient();
 
             var httpResponse = await httpClient.GetAsync("allnotes");
+            //try
+            //{
+            //    var httpResponse = await httpClient.GetAsync("gettest");
+            //}
+            //catch (HttpRequestException e)
+            //{
+            //    Console.WriteLine(e.InnerException.Message);
+            //}
 
             List<NoteDTO>? notes = new List<NoteDTO>();
 
