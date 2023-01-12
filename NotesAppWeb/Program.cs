@@ -39,6 +39,7 @@ builder.Services.AddScoped<IPasswordHasher<NoteDTO>, PasswordHasher<NoteDTO>>();
 builder.Services.AddHttpClient("Notes", httpClient =>
 {
     httpClient.BaseAddress = new Uri("http://app_api/api/NotesApi/");
+    //httpClient.BaseAddress = new Uri("https://localhost:7058/api/NotesApi/");
 });
 builder.Services.AddHttpContextAccessor();
 

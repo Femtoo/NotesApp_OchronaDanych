@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 networks:
   notka:
 services:
@@ -13,11 +13,18 @@ services:
       - notka
 
   app_api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=5000
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     build:
       context: .
       dockerfile: NotesAppWeb/Dockerfile
     ports:
-      - "5000:80"
+      - "5000:443"
     depends_on:
       - sql
     command: ["dotnet", "ef", "database update"]

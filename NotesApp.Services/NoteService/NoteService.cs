@@ -45,6 +45,10 @@ namespace NotesApp.Services.NoteService
         {
             NoteDTO? note = new NoteDTO();
             var hash = await GetHash(password.NoteId);
+            if(hash == null)
+            {
+                return null;
+            }
 
             var result = _passwordHasher.VerifyHashedPassword(new NoteDTO { Id = 0 }, hash, password.Password);
             if (result == PasswordVerificationResult.Failed)
