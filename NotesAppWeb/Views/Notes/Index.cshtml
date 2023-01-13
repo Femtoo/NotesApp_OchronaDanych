@@ -7,16 +7,20 @@
             <h2 class="text-primary">Notes List</h2>
         </div>
         <div class="col-6 text-end">
-            <a asp-controller="Notes" asp-action="CreateNote" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> &nbsp; Create New Secure Note
-            </a>
-            <a asp-controller="Notes" asp-action="CreateCommonNote" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> &nbsp; Create New Note
+            <a asp-controller="Home" asp-action="Logout" class="btn btn-secondary">
+                Logout
             </a>
         </div>
     </div>
     <br /><br />
-
+    <div>
+        <a asp-controller="Notes" asp-action="CreateNote" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> &nbsp; Create New Secure Note
+        </a>
+        <a asp-controller="Notes" asp-action="CreateCommonNote" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> &nbsp; Create New Note
+        </a>
+    </div>
 <table class="table table-bordered table-striped" style="width:100%">
     <thead>
         <tr>

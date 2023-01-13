@@ -166,6 +166,7 @@ namespace NotesApp.Services.NoteService
 
             var httpClient = new HttpClient(handler);
             httpClient.BaseAddress = new Uri("https://localhost/api/NotesApi/");
+            //httpClient.BaseAddress = new Uri("https://localhost:7058/api/NotesApi/");
             var token = _httpContextAccessor.HttpContext.Request.Cookies[Constants.XAccessToken];
             if (!string.IsNullOrWhiteSpace(token))
             {

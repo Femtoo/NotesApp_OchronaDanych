@@ -8,6 +8,7 @@ using NotesApp.Utility;
 using NotesAppWeb.Models;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 
 namespace NotesAppWeb.Controllers
@@ -16,13 +17,11 @@ namespace NotesAppWeb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUserService _userService;
-        private readonly INoteService _noteService;
 
-        public HomeController(ILogger<HomeController> logger, IUserService userService, INoteService noteService)
+        public HomeController(ILogger<HomeController> logger, IUserService userService)
         {
             _logger = logger;
             _userService = userService;
-            _noteService = noteService;
         }
 
         public IActionResult Index()
@@ -75,6 +74,12 @@ namespace NotesAppWeb.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult Logout()
+        {
+            SetTokenAsCookie("");
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

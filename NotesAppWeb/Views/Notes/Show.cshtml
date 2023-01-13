@@ -6,7 +6,7 @@
         <h1 class="text-black">@Model.Title</h1>
     </div>
     <div class="mb-3">
-        <p class="text-secondary">@Model.Content</p>
+        @Html.Raw(Model.Content)
     </div>
     <form method="post" asp-action="Update">
         <input asp-for="Id" hidden/>

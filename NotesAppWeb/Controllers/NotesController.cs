@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ganss.Xss;
+using Markdig;
+using Microsoft.AspNetCore.Mvc;
 using NotesApp.Models;
 using NotesApp.Models.ViewModels;
 using NotesApp.Services.NoteService;
@@ -41,11 +43,12 @@ namespace NotesAppWeb.Controllers
 
             if(ModelState.IsValid)
             {
+                var sanitizer = new HtmlSanitizer();
                 await _noteService.AddNote(new NoteDTO
                 {
                     Id = 0,
                     Title = note.Title,
-                    Content = note.Content,
+                    Content = sanitizer.Sanitize(note.Content),
                     PasswordHash = note.Password,
                     UserId = 0
                 });
@@ -66,11 +69,12 @@ namespace NotesAppWeb.Controllers
 
             if (ModelState.IsValid)
             {
+                var sanitizer = new HtmlSanitizer();
                 await _noteService.AddNote(new NoteDTO
                 {
                     Id = 0,
                     Title = note.Title,
-                    Content = note.Content,
+                    Content = sanitizer.Sanitize(note.Content),
                     UserId = 0
                 });
                 return RedirectToAction("Index");
@@ -101,6 +105,8 @@ namespace NotesAppWeb.Controllers
             }
             else
             {
+                var sanitizer = new HtmlSanitizer();
+                note.Content= sanitizer.Sanitize(Markdown.ToHtml(note.Content));
                 return View("Show",note);
             }
         }
@@ -116,6 +122,8 @@ namespace NotesAppWeb.Controllers
             }
             else
             {
+                var sanitizer = new HtmlSanitizer();
+                note.Content = sanitizer.Sanitize(Markdown.ToHtml(note.Content));
                 note.PasswordHash = pass.Password;
                 return View(note);
             }
@@ -123,8 +131,14 @@ namespace NotesAppWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(NoteDTO note)
+        public async Task<IActionResult> Update(NoteDTO note)
         {
+            var notee = await _noteService.GetNote(new PasswordVM { NoteId = note.Id, Password = note.PasswordHash});
+            if(notee != null)
+            {
+                note.Content = notee.Content;
+                return View(note);
+            }
             return View(note);
         }
 
@@ -134,6 +148,8 @@ namespace NotesAppWeb.Controllers
         {
             if(ModelState.IsValid)
             {
+                var sanitizer = new HtmlSanitizer();
+                note.Content = sanitizer.Sanitize(note.Content);
                 await _noteService.UpdateNote(note);
                 return RedirectToAction("Index");
             } else

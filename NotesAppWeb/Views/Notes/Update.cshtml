@@ -16,10 +16,11 @@
         </div>
         <div class="mb-3">
             <label asp-for="Content"></label>
-            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+            <textarea asp-for="Content" class="form-control" id="content_hid" hidden></textarea>
+            <textarea class="form-control" oninput="GetText()" id="content" rows="7"> @Html.Raw(Model.Content) </textarea>
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+        <button type="submit" onclick="GetText" class="btn btn-primary" style="width:150px">Update</button>
         <a asp-controller="Notes" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
@@ -28,6 +29,11 @@
 
 @section Scripts{
     @{
-        <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+                function GetText(){
+                document.getElementById("content_hid").value = document.getElementById("content").value;
+                }
+    </script>
     }
-    }
+}
