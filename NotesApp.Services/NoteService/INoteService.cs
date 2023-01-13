@@ -15,5 +15,6 @@ namespace NotesApp.Services.NoteService
         Task<bool> RemoveNote(int id);
         Task UpdateNote(NoteDTO note);
         Task<NoteDTO?> GetNote(PasswordVM password);
+        Task<bool> CheckIfCommonNote(int id);
     }
 }

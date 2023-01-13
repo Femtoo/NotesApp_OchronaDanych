@@ -14,6 +14,8 @@ namespace NotesApp.Models.ViewModels
         [Required]
         public string Content { get; set; } = string.Empty;
         [Required]
+        //[RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", 
+        //    ErrorMessage = "Password must contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character")]
         public string Password { get; set; } = string.Empty;
         [Required]
         [Display(Name = "Confirm Password")]

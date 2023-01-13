@@ -31,9 +31,16 @@ namespace NotesApp.Services.NoteService
         public async Task AddNote(NoteDTO note)
         {
             //szyfrowanie
-            note.Content = Encrypt(note.Content, note.PasswordHash);
-            var hashed = _passwordHasher.HashPassword(new NoteDTO { Id = note.Id }, note.PasswordHash);
-            note.PasswordHash = hashed;
+            if(note.PasswordHash==string.Empty)
+            {
+                note.PasswordHash="common";
+                note.Content = Encrypt(note.Content, note.PasswordHash);
+            } else
+            {
+                note.Content = Encrypt(note.Content, note.PasswordHash);
+                var hashed = _passwordHasher.HashPassword(new NoteDTO { Id = note.Id }, note.PasswordHash);
+                note.PasswordHash = hashed;
+            }
 
             var httpClient = MakeHttpClient();
 
@@ -44,16 +51,19 @@ namespace NotesApp.Services.NoteService
         public async Task<NoteDTO?> GetNote(PasswordVM password)
         {
             NoteDTO? note = new NoteDTO();
-            var hash = await GetHash(password.NoteId);
-            if(hash == null)
+            if (!password.Password.Equals("common"))
             {
-                return null;
-            }
+                var hash = await GetHash(password.NoteId);
+                if (hash == null)
+                {
+                    return null;
+                }
 
-            var result = _passwordHasher.VerifyHashedPassword(new NoteDTO { Id = 0 }, hash, password.Password);
-            if (result == PasswordVerificationResult.Failed)
-            {
-                return null;
+                var result = _passwordHasher.VerifyHashedPassword(new NoteDTO { Id = 0 }, hash, password.Password);
+                if (result == PasswordVerificationResult.Failed)
+                {
+                    return null;
+                }
             }
 
             var httpClient = MakeHttpClient();
@@ -131,9 +141,31 @@ namespace NotesApp.Services.NoteService
             var httpResponse = await httpClient.PostAsJsonAsync("updatenote", note);
         }
 
+        public async Task<bool> CheckIfCommonNote(int id)
+        {
+            var hash = await GetHash(id);
+            if(hash != null && hash.Equals("common"))
+            {
+                return true;
+            } 
+            else
+            {
+                return false;
+            }
+        }
+
         private HttpClient MakeHttpClient()
         {
-            var httpClient = _httpClientFactory.CreateClient("Notes");
+            var handler = new HttpClientHandler();
+            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            handler.ServerCertificateCustomValidationCallback =
+                (httpRequestMessage, cert, cetChain, policyErrors) =>
+                {
+                    return true;
+                };
+
+            var httpClient = new HttpClient(handler);
+            httpClient.BaseAddress = new Uri("https://localhost/api/NotesApi/");
             var token = _httpContextAccessor.HttpContext.Request.Cookies[Constants.XAccessToken];
             if (!string.IsNullOrWhiteSpace(token))
             {

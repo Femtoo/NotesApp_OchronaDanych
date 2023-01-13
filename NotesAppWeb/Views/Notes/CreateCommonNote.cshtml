@@ -1,0 +1,31 @@
+﻿@using NotesApp.Models.ViewModels
+@model NoteCommonVM
+
+<form method="post" asp-action="CreateCommonNote">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary">Create Note</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px">Create</button>
+        <a asp-controller="Notes" asp-action="Index" class="btn btn-secondary" style="width:150px">
+            Back to List
+        </a>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    }

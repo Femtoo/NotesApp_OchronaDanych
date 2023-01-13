@@ -16,17 +16,16 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=5000
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ${APPDATA}\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
+      - ${APPDATA}\ASP.NET\https:/root/.aspnet/https
     build:
       context: .
       dockerfile: NotesAppWeb/Dockerfile
     ports:
-      - "5000:443"
+      - "443:443"
+      - "80:80"
     depends_on:
       - sql
-    command: ["dotnet", "ef", "database update"]
     networks:
       - notka

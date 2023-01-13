@@ -54,10 +54,55 @@ namespace NotesAppWeb.Controllers
 
             return View(note);
         }
-
-        public IActionResult Password(int id)
+        public IActionResult CreateCommonNote()
         {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCommonNote(NoteCommonVM note)
+        {
+
+            if (ModelState.IsValid)
+            {
+                await _noteService.AddNote(new NoteDTO
+                {
+                    Id = 0,
+                    Title = note.Title,
+                    Content = note.Content,
+                    UserId = 0
+                });
+                return RedirectToAction("Index");
+            }
+
+            return View(note);
+        }
+
+        public async Task<IActionResult> Password(int id)
+        {
+            if(await _noteService.CheckIfCommonNote(id))
+            {
+                return RedirectToAction("ShowCommon", new PasswordVM
+                {
+                    NoteId=id,
+                    Password="common"
+                });
+            }
             return View(new PasswordVM { NoteId = id, Password = string.Empty});
+        }
+
+        public async Task<IActionResult> ShowCommon(PasswordVM pass)
+        {
+            var note = await _noteService.GetNote(pass);
+            if (note == null)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View("Show",note);
+            }
         }
 
         [HttpPost]
@@ -75,6 +120,7 @@ namespace NotesAppWeb.Controllers
                 return View(note);
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Update(NoteDTO note)
