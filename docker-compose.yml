@@ -17,8 +17,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
     volumes:
-      - ${APPDATA}\Microsoft\UserSecrets\:/root/.microsoft/usersecrets
-      - ${APPDATA}\ASP.NET\https:/root/.aspnet/https
+      - .\sslcred\UserSecrets\:/root/.microsoft/usersecrets
+      - .\sslcred\https:/root/.aspnet/https
     build:
       context: .
       dockerfile: NotesAppWeb/Dockerfile
