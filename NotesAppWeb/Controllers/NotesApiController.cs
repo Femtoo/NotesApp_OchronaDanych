@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AngleSharp.Dom;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -74,6 +75,7 @@ namespace NotesAppWeb.Controllers
             {
                 Title = note.Title,
                 Content = note.Content,
+                IsPublic = note.IsPublic,
                 PasswordHash = note.PasswordHash,
                 User = user,
             });
@@ -81,6 +83,24 @@ namespace NotesAppWeb.Controllers
             await _unitOfWork.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpGet("publicnotes")]
+        public async Task<IActionResult> GetAllPublicNotes()
+        {
+            var notesDb = await _unitOfWork.NoteRepository.GetAll(u => u.IsPublic == true);
+            List<NoteDTO> notes = new List<NoteDTO>();
+
+            foreach (var note in notesDb)
+            {
+                notes.Add(new NoteDTO
+                {
+                    Id = note.Id,
+                    Title = note.Title,
+                });
+            }
+
+            return Ok(notes);
         }
 
         [HttpGet("allnotes")]
@@ -114,70 +134,118 @@ namespace NotesAppWeb.Controllers
         [HttpPost("getnote")]
         public async Task<IActionResult> GetNote([FromBody]int id)
         {
-            string email = string.Empty;
-            if (_httpContextAccessor.HttpContext != null)
+            var noteDb = await _unitOfWork.NoteRepository.GetFirstOrDefault(u => u.Id == id);
+            if (noteDb != null && noteDb.IsPublic)
             {
-                email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                string email = string.Empty;
+                if (_httpContextAccessor.HttpContext != null)
+                {
+                    email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                }
+                var user = await _unitOfWork.UserRepository.GetFirstOrDefault(u => u.Email == email);
+
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                NoteDTO result = new NoteDTO
+                {
+                    Id = noteDb.Id,
+                    Content = noteDb.Content,
+                    PasswordHash = noteDb.PasswordHash,
+                    Title = noteDb.Title,
+                    UserId = noteDb.UserId,
+                };
+
+                return Ok(result);
+            } 
+            else
+            {
+                string email = string.Empty;
+                if (_httpContextAccessor.HttpContext != null)
+                {
+                    email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                }
+                var user = await _unitOfWork.UserRepository.GetFirstOrDefault(u => u.Email == email, includeProperties: "Notes");
+
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                if (!user.Notes.Select(u => u.Id).Contains(id))
+                {
+                    return BadRequest();
+                }
+
+                var note = user.Notes.FirstOrDefault(u => u.Id == id);
+
+                if (note == null)
+                {
+                    return BadRequest();
+                }
+
+                NoteDTO result = new NoteDTO
+                {
+                    Id = note.Id,
+                    Content = note.Content,
+                    PasswordHash = note.PasswordHash,
+                    Title = note.Title,
+                    UserId = user.Id,
+                };
+                return Ok(result);
             }
-            var user = await _unitOfWork.UserRepository.GetFirstOrDefault(u => u.Email == email, includeProperties: "Notes");
-
-            if (user == null)
-            {
-                return BadRequest();
-            }
-
-            if (!user.Notes.Select(u => u.Id).Contains(id))
-            {
-                return BadRequest();
-            }
-
-            var note = user.Notes.FirstOrDefault(u => u.Id == id);
-
-            if(note == null )
-            {
-                return BadRequest();
-            }
-
-            NoteDTO result = new NoteDTO
-            {
-                Id = note.Id,
-                Content = note.Content,
-                PasswordHash = note.PasswordHash,
-                Title = note.Title,
-                UserId = user.Id,
-            };
-
-            return Ok(result);
         }
 
         [HttpPost("getnotehash")]
         public async Task<IActionResult> GetNoteHash([FromBody] int id)
         {
-            string email = string.Empty;
-            if (_httpContextAccessor.HttpContext != null)
+            var noteDb = await _unitOfWork.NoteRepository.GetFirstOrDefault(u => u.Id == id);
+            if (noteDb != null && noteDb.IsPublic)
             {
-                email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
-            }
-            var user = await _unitOfWork.UserRepository.GetFirstOrDefault(u => u.Email == email, includeProperties: "Notes");
+                string email = string.Empty;
+                if (_httpContextAccessor.HttpContext != null)
+                {
+                    email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                }
+                var user = await _unitOfWork.UserRepository.GetFirstOrDefault(u => u.Email == email);
 
-            if (user == null)
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(noteDb.PasswordHash);
+            }
+            else
             {
-                return BadRequest();
+                string email = string.Empty;
+                if (_httpContextAccessor.HttpContext != null)
+                {
+                    email = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email);
+                }
+                var user = await _unitOfWork.UserRepository.GetFirstOrDefault(u => u.Email == email, includeProperties: "Notes");
+
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                if (!user.Notes.Select(u => u.Id).Contains(id))
+                {
+                    return BadRequest();
+                }
+
+                var note = user.Notes.FirstOrDefault(u => u.Id == id);
+
+                if (note == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(note.PasswordHash);
             }
-
-            if (!user.Notes.Select(u => u.Id).Contains(id))
-            {
-                return BadRequest();
-            }
-
-            var note = user.Notes.FirstOrDefault(u => u.Id == id);
-
-            if (note == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(note.PasswordHash);
         }
 
         [HttpPost("deletenote")]

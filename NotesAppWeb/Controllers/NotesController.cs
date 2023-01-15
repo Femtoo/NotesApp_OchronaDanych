@@ -15,6 +15,23 @@ namespace NotesAppWeb.Controllers
         {
             _noteService = noteService;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Public()
+        {
+            List<NotesIndexVM> notesIndex = new List<NotesIndexVM>();
+            IEnumerable<NoteDTO> notes = await _noteService.GetAllPublicNotes();
+            foreach (NoteDTO note in notes)
+            {
+                notesIndex.Add(new NotesIndexVM
+                {
+                    Title = note.Title,
+                    Id = note.Id,
+                });
+            }
+            return View(notesIndex);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -48,6 +65,7 @@ namespace NotesAppWeb.Controllers
                 {
                     Id = 0,
                     Title = note.Title,
+                    IsPublic = note.IsPublic,
                     Content = sanitizer.Sanitize(note.Content),
                     PasswordHash = note.Password,
                     UserId = 0
@@ -74,6 +92,7 @@ namespace NotesAppWeb.Controllers
                 {
                     Id = 0,
                     Title = note.Title,
+                    IsPublic = note.IsPublic,
                     Content = sanitizer.Sanitize(note.Content),
                     UserId = 0
                 });
@@ -96,6 +115,34 @@ namespace NotesAppWeb.Controllers
             return View(new PasswordVM { NoteId = id, Password = string.Empty});
         }
 
+        public async Task<IActionResult> PasswordPublic(int id)
+        {
+            if (await _noteService.CheckIfCommonNote(id))
+            {
+                return RedirectToAction("ShowCommonPublic", new PasswordVM
+                {
+                    NoteId = id,
+                    Password = "common"
+                });
+            }
+            return View(new PasswordVM { NoteId = id, Password = string.Empty });
+        }
+
+        public async Task<IActionResult> ShowCommonPublic(PasswordVM pass)
+        {
+            var note = await _noteService.GetNote(pass);
+            if (note == null)
+            {
+                return RedirectToAction("Public");
+            }
+            else
+            {
+                var sanitizer = new HtmlSanitizer();
+                note.Content = sanitizer.Sanitize(Markdown.ToHtml(note.Content));
+                return View("ShowPublic", note);
+            }
+        }
+
         public async Task<IActionResult> ShowCommon(PasswordVM pass)
         {
             var note = await _noteService.GetNote(pass);
@@ -108,6 +155,25 @@ namespace NotesAppWeb.Controllers
                 var sanitizer = new HtmlSanitizer();
                 note.Content= sanitizer.Sanitize(Markdown.ToHtml(note.Content));
                 return View("Show",note);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowPublic(PasswordVM pass)
+        {
+            var note = await _noteService.GetNote(pass);
+            if (note == null)
+            {
+                TempData["wrong_pass"] = "Wrong Password";
+                return RedirectToAction("Public");
+            }
+            else
+            {
+                var sanitizer = new HtmlSanitizer();
+                note.Content = sanitizer.Sanitize(Markdown.ToHtml(note.Content));
+                note.PasswordHash = pass.Password;
+                return View(note);
             }
         }
 

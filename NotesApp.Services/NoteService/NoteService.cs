@@ -114,6 +114,34 @@ namespace NotesApp.Services.NoteService
             return notes;
         }
 
+        public async Task<IEnumerable<NoteDTO>> GetAllPublicNotes()
+        {
+            var httpClient = MakeHttpClient();
+
+            var httpResponse = await httpClient.GetAsync("publicnotes");
+            //try
+            //{
+            //    var httpResponse = await httpClient.GetAsync("gettest");
+            //}
+            //catch (HttpRequestException e)
+            //{
+            //    Console.WriteLine(e.InnerException.Message);
+            //}
+
+            List<NoteDTO>? notes = new List<NoteDTO>();
+
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                notes = await httpResponse.Content.ReadFromJsonAsync<List<NoteDTO>>();
+            }
+            else
+            {
+
+            }
+
+            return notes;
+        }
+
         public async Task<bool> RemoveNote(int id)
         {
             var httpClient = MakeHttpClient();

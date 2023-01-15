@@ -14,5 +14,7 @@ namespace NotesApp.Models.ViewModels
         public string Title { get; set; } = string.Empty;
         [Required]
         public string Content { get; set; } = string.Empty;
+        [Required]
+        public bool IsPublic { get; set; } = false;
     }
 }

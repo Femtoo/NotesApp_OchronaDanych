@@ -21,5 +21,7 @@ namespace NotesApp.Models.ViewModels
         [Display(Name = "Confirm Password")]
         [Compare("Password", ErrorMessage = "Passwords have to match")]
         public string ConfirmPassword { get; set; } = string.Empty;
+        [Required]
+        public bool IsPublic { get; set; } = false;
     }
 }

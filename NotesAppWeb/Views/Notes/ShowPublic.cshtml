@@ -1,0 +1,14 @@
+﻿@using NotesApp.Models
+@model NoteDTO
+
+<div class="border p-3 mt-4">
+    <div class="col-12">
+        <h1 class="text-black">@Model.Title</h1>
+    </div>
+    <div class="mb-3">
+        @Html.Raw(Model.Content)
+    </div>
+    <a asp-controller="Notes" asp-action="Public" class="btn btn-info" style="width:150px">
+        Back to List
+    </a>
+</div>

@@ -13,6 +13,10 @@
             <span asp-validation-for="Title" class="text-danger"></span>
         </div>
         <div class="mb-3">
+            <label asp-for="IsPublic"></label>
+            <input asp-for="IsPublic" class="form-check-input" />
+        </div>
+        <div class="mb-3">
             <label asp-for="Content"></label>
             <textarea asp-for="Content" class="form-control" rows="7"></textarea>
             <span asp-validation-for="Content" class="text-danger"></span>

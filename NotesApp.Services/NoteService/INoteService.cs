@@ -16,5 +16,6 @@ namespace NotesApp.Services.NoteService
         Task UpdateNote(NoteDTO note);
         Task<NoteDTO?> GetNote(PasswordVM password);
         Task<bool> CheckIfCommonNote(int id);
+        Task<IEnumerable<NoteDTO>> GetAllPublicNotes();
     }
 }
