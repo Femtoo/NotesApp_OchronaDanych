@@ -20,7 +20,7 @@
             <textarea class="form-control" oninput="GetText()" id="content" rows="7"> @Html.Raw(Model.Content) </textarea>
             <span asp-validation-for="Content" class="text-danger"></span>
         </div>
-        <button type="submit" onclick="GetText" class="btn btn-primary" style="width:150px">Update</button>
+        <button type="submit" onclick="GetText()" class="btn btn-primary" style="width:150px">Update</button>
         <a asp-controller="Notes" asp-action="Index" class="btn btn-secondary" style="width:150px">
             Back to List
         </a>
@@ -31,9 +31,9 @@
     @{
     <partial name="_ValidationScriptsPartial" />
     <script>
-                function GetText(){
-                document.getElementById("content_hid").value = document.getElementById("content").value;
-                }
+                    function GetText(){
+                    document.getElementById("content_hid").value = document.getElementById("content").value;
+                    }
     </script>
     }
 }
