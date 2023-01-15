@@ -7,7 +7,7 @@ Aplikacja przechowuje notatki zaszyfrowane.
 ## Użytkowanie
 Najpierw trzeba sie zarejestrować. Po zalogowaniu wyswietlana jest lista notatek. Można stworzyć nową notatkę zwykłą lub z hasłem.
 W notatkach można zaznaczyć czy chce się, żeby była ona publiczna czy nie. Można także zobaczyć listę publicznych notatek. 
-Notatki swoje można usuwać i edytować za to notatki publiczne można tylko obejrzeć. 
+Notatki swoje można usuwać i edytować, za to notatki publiczne można tylko obejrzeć. 
 
 ## Technologie
 Aplikacja została napisana w technologii ASP .NET Core MVC, baza danych to SQL Server. Aplikacja jest skonteneryzowana w kontenerze linuxowym (Docker).
