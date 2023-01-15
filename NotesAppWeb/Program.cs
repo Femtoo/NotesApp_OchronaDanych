@@ -6,6 +6,7 @@ using NotesApp.DataAccess;
 using NotesApp.DataAccess.Repository;
 using NotesApp.DataAccess.Repository.IRepository;
 using NotesApp.Models;
+using NotesApp.Services.LoginAttemptService;
 using NotesApp.Services.NoteService;
 using NotesApp.Services.UserService;
 using NotesAppWeb;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<IPasswordHasher<NoteDTO>, PasswordHasher<NoteDTO>>();
+builder.Services.AddScoped<ILoginAttemptService, LoginAttemptService>();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 

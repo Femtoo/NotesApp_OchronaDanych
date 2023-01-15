@@ -12,7 +12,12 @@
             </a>
         </div>
     </div>
-    <br /><br />
+    <br />
+    @if (TempData["wrong_pass"] != null)
+    {
+        <span class="text-danger">@TempData["wrong_pass"]</span>
+    }
+    <br />
     <div>
         <a asp-controller="Notes" asp-action="CreateNote" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> &nbsp; Create New Secure Note

@@ -17,6 +17,8 @@ namespace NotesApp.Models
         public string Content { get; set; } = string.Empty;
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
+        //[Required]
+        //public bool IsPublic { get; set; } = false;
         public int UserId { get; set; }
     }
 }

@@ -118,6 +118,7 @@ namespace NotesAppWeb.Controllers
             var note = await _noteService.GetNote(pass);
             if (note == null)
             {
+                TempData["wrong_pass"] = "Wrong Password";
                 return RedirectToAction("Index");
             }
             else

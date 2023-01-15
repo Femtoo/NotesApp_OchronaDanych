@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using NotesApp.DataAccess.Repository.IRepository;
 using NotesApp.Models;
+using NotesApp.Services.LoginAttemptService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace NotesApp.Services.UserService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher<User> _passwordHasher;
-        public UserService(IUnitOfWork unitOfWork, IPasswordHasher<User> passwordHasher)
+        private readonly ILoginAttemptService _loginAttemptService;
+        public UserService(IUnitOfWork unitOfWork, IPasswordHasher<User> passwordHasher, ILoginAttemptService loginAttemptService)
         {
             _unitOfWork = unitOfWork;
             _passwordHasher = passwordHasher;
+            _loginAttemptService = loginAttemptService;
         }
 
         public async Task<User> GetUser(Expression<Func<User, bool>> filter, string? includeProperties = null)
@@ -30,6 +33,11 @@ namespace NotesApp.Services.UserService
 
         public async Task<bool> Login(string email, string password)
         {
+            if(await _loginAttemptService.CheckIfLoginAttemptShouldBeBlocked(email))
+            {
+                return false;
+            }
+            await _loginAttemptService.AddLoginAttempt(email);
             var userDB = await _unitOfWork.UserRepository.GetFirstOrDefault(u => u.Email == email);
             if (userDB == default)
             {

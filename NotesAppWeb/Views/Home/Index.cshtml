@@ -5,6 +5,9 @@
     <h1 class="display-4">Login</h1>
     <form method="post" asp-action="Login">
         <div class="border p-3 mt-4">
+            @if(TempData["login_error"]!=null) {
+                <span class="text-danger">@TempData["login_error"]</span>
+            }
             <div class="mb-3">
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" />

@@ -36,12 +36,14 @@ namespace NotesAppWeb.Controllers
             var response = await _userService.Login(userLog.Email, userLog.Password);
             if (!response)
             {
+                TempData["login_error"] = "Wrong credentials or too many attempts (max 5 attempts in 5 min)";
                 return RedirectToAction("Index");
             }
 
             var user = await _userService.GetUser(u => u.Email == userLog.Email);
             if (user == default)
             {
+                TempData["login_error"] = "Wrong credentials or too many attempts (max 5 attempts in 5 min)";
                 return RedirectToAction("Index");
             }
 
@@ -68,7 +70,8 @@ namespace NotesAppWeb.Controllers
             {
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Privacy");
+            TempData["register_error"] = "There is already account with this email";
+            return RedirectToAction("Register");
         }
 
         public IActionResult Privacy()

@@ -15,10 +15,12 @@ namespace NotesApp.DataAccess.Repository
             _db = db;
             NoteRepository = new NoteRepository(_db);
             UserRepository = new UserRepository(_db);
+            LoginAttemptRepository = new LoginAttemptRepository(_db);
         }
 
         public IUserRepository UserRepository { get; private set; }
         public INoteRepository NoteRepository { get; private set; }
+        public ILoginAttemptRepository LoginAttemptRepository { get; private set; }
 
         public async Task<bool> SaveChangesAsync()
         {

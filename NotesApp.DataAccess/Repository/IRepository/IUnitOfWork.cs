@@ -10,6 +10,7 @@ namespace NotesApp.DataAccess.Repository.IRepository
     {
         IUserRepository UserRepository { get; }
         INoteRepository NoteRepository { get; }
+        ILoginAttemptRepository LoginAttemptRepository { get; }
         Task<bool> SaveChangesAsync();
     }
 }

@@ -22,6 +22,8 @@ namespace NotesApp.Models
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; } = new User();
+        //[Required]
+        //public bool IsPublic { get; set; } = false;
 
     }
 }
