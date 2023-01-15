@@ -19,7 +19,9 @@ https. Do komunikacji z bazą danych wykorzystywany jest framework Entity Framew
 
 ## Uruchomienie
 Po ściągnieciu repo, przejść do folderu repo NotesApp/
+
 docker compose build
+
 docker compose up
 
 Adres serwera:
